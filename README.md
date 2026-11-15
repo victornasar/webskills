@@ -8,14 +8,14 @@ Host-agnostic: any coding agent that can load a `SKILL.md` (Cursor, Claude Code,
 
 | Skill | Does | Does not |
 | --- | --- | --- |
-| [`web-start`](web-start/) | Empty Next.js App Router baseline via `create-next-app` (pnpm, TS, Tailwind, no `src/`, `--empty`) + `pnpm build` smoke | UI kits, auth, DB, feature folders, custom README |
+| [`init-next`](init-next/) | Empty Next.js App Router baseline via `create-next-app` (pnpm, TS, Tailwind, no `src/`, `--empty`) + `pnpm build` smoke | UI kits, auth, DB, feature folders, custom README |
 | [`add-shadcn`](add-shadcn/) | Locked shadcn/ui init + fixed core primitives + Toaster mount + build smoke | Demos, example pages, per-run style/color picks |
 | [`init-readme`](init-readme/) | Short high-signal `README.md` + optional `AGENTS.md` Project blurb | Badges, emoji essays, inventing product copy |
 
 Typical pipeline (run only what you need, in order):
 
 ```text
-web-start  →  add-shadcn  →  init-readme
+init-next  →  add-shadcn  →  init-readme
 ```
 
 ## Philosophy
@@ -35,7 +35,7 @@ webskills/
   AGENTS.md                 # kit index for agents working in this repo
   conventions/
     feature-directories.md  # preferred app layout (single source of truth)
-  web-start/
+  init-next/
     SKILL.md
     scripts/init.sh
   add-shadcn/
@@ -47,18 +47,18 @@ webskills/
 
 ## Install (any host)
 
-Skills are discovered as **directories that contain `SKILL.md`**. Install each package you want as a top-level skill in your agent’s skills directory (names must stay `web-start`, `add-shadcn`, `init-readme`).
+Skills are discovered as **directories that contain `SKILL.md`**. Install each package you want as a top-level skill in your agent’s skills directory (names must stay `init-next`, `add-shadcn`, `init-readme`).
 
 Examples:
 
 ```bash
 # Cursor (personal)
-ln -s "$(pwd)/web-start"   ~/.cursor/skills/web-start
+ln -s "$(pwd)/init-next"   ~/.cursor/skills/init-next
 ln -s "$(pwd)/add-shadcn"  ~/.cursor/skills/add-shadcn
 ln -s "$(pwd)/init-readme" ~/.cursor/skills/init-readme
 
 # Claude Code / generic agents dir (adjust path to your setup)
-ln -s "$(pwd)/web-start"   ~/.agents/skills/web-start
+ln -s "$(pwd)/init-next"   ~/.agents/skills/init-next
 ln -s "$(pwd)/add-shadcn"  ~/.agents/skills/add-shadcn
 ln -s "$(pwd)/init-readme" ~/.agents/skills/init-readme
 ```
@@ -67,7 +67,7 @@ Or copy the three folders instead of symlinking. Nested under `webskills/` is fo
 
 Project-scoped install: copy or symlink the same three folders into a repo’s `.cursor/skills/` (or that host’s project skills path).
 
-**Smoke test after install:** run `web-start` against an empty lowercase-named temp dir (e.g. `/tmp/webskills-smoke`) and confirm `pnpm build` passes there.
+**Smoke test after install:** run `init-next` against an empty lowercase-named temp dir (e.g. `/tmp/webskills-smoke`) and confirm `pnpm build` passes there.
 
 ## Prerequisites
 
@@ -79,7 +79,7 @@ Project-scoped install: copy or symlink the same three folders into a repo’s `
 
 ## Locked baselines (summary)
 
-**web-start** — `create-next-app@latest` with: `--yes --ts --eslint --tailwind --app --no-src-dir --import-alias "@/*" --agents-md --empty --use-pnpm` plus `--no-agent-feedback`, and `--disable-git` only if `.git` already exists. Flags live in [`web-start/scripts/init.sh`](web-start/scripts/init.sh).
+**init-next** — `create-next-app@latest` with: `--yes --ts --eslint --tailwind --app --no-src-dir --import-alias "@/*" --agents-md --empty --use-pnpm` plus `--no-agent-feedback`, and `--disable-git` only if `.git` already exists. Flags live in [`init-next/scripts/init.sh`](init-next/scripts/init.sh).
 
 **add-shadcn** — `shadcn@latest init -d --base radix --css-variables --no-monorepo -y`, then add: `button` `input` `label` `card` `dialog` `dropdown-menu` `separator` `sonner` `skeleton`. Style ends up `radix-nova`, base color `neutral`, oklch CSS variables, RSC on. `form` omitted (current registry no-op). Flags live in [`add-shadcn/scripts/init.sh`](add-shadcn/scripts/init.sh).
 
@@ -89,7 +89,7 @@ Project-scoped install: copy or symlink the same three folders into a repo’s `
 
 After the baseline exists, prefer the structure in [`conventions/feature-directories.md`](conventions/feature-directories.md): thin `app/`, domain in `features/<name>/`, primitives in `components/ui/`, shared non-UI in `lib/`.
 
-`web-start` deliberately does **not** create that tree — it stays an empty official baseline. Later skills and day-to-day work follow the convention.
+`init-next` deliberately does **not** create that tree — it stays an empty official baseline. Later skills and day-to-day work follow the convention.
 
 ## How agents should run a skill
 

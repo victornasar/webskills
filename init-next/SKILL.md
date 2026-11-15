@@ -1,12 +1,12 @@
 ---
-name: web-start
+name: init-next
 description: >-
   Initializes a greenfield local Next.js App Router app via create-next-app
   (pnpm, empty baseline) with guards and a build smoke check.
 disable-model-invocation: true
 ---
 
-# web-start
+# init-next
 
 Greenfield-only. Deterministic empty App Router baseline. No stack add-ons, no feature-directory scaffolding, no per-run flag overrides.
 
@@ -24,7 +24,7 @@ Flag source of truth: [`scripts/init.sh`](scripts/init.sh) — do not restate or
    - Completion: absolute target path chosen.
 
 2. **Self-hit guard**
-   - Abort if the target is this skill package (contains this skill’s `SKILL.md` with `name: web-start`, or is clearly the `web-start` skill root).
+   - Abort if the target is this skill package (contains this skill’s `SKILL.md` with `name: init-next`, or is clearly the `init-next` skill root).
    - Completion: target is not the skill package.
 
 3. **Emptiness / greenfield guard**

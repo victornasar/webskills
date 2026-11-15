@@ -13,7 +13,7 @@ This repository is a **skill kit**, not an application. Host agents (Cursor, Cla
 
 | Skill | Path | Job |
 | --- | --- | --- |
-| `web-start` | [web-start/SKILL.md](web-start/SKILL.md) | Greenfield empty Next.js App Router baseline |
+| `init-next` | [init-next/SKILL.md](init-next/SKILL.md) | Greenfield empty Next.js App Router baseline |
 | `add-shadcn` | [add-shadcn/SKILL.md](add-shadcn/SKILL.md) | Locked shadcn/ui + core primitives on an existing app |
 | `init-readme` | [init-readme/SKILL.md](init-readme/SKILL.md) | Minimal project README + light AGENTS.md Project blurb |
 

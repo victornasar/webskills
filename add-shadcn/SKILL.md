@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 # add-shadcn
 
-Post-`web-start` UI kit layer. Deterministic shadcn init + fixed primitives. No demos, no example pages, no per-run flag overrides.
+Post-`init-next` UI kit layer. Deterministic shadcn init + fixed primitives. No demos, no example pages, no per-run flag overrides.
 
 Flag / component source of truth: [`scripts/init.sh`](scripts/init.sh) — do not restate or invent flags.
 
