@@ -16,6 +16,7 @@ This repository is a **skill kit**, not an application. Host agents (Cursor, Cla
 | `init-next` | [init-next/SKILL.md](init-next/SKILL.md) | Greenfield empty Next.js App Router baseline |
 | `add-shadcn` | [add-shadcn/SKILL.md](add-shadcn/SKILL.md) | Locked shadcn/ui + core primitives on an existing app |
 | `add-clerk` | [add-clerk/SKILL.md](add-clerk/SKILL.md) | Clerk auth infrastructure via official CLI (+ shadcn theme when present) |
+| `add-env` | [add-env/SKILL.md](add-env/SKILL.md) | Build-time env validation (t3-env + zod) adopting existing `.env*` names |
 | `init-readme` | [init-readme/SKILL.md](init-readme/SKILL.md) | Minimal project README + light AGENTS.md Project blurb |
 
 Each skill is **user-invoked** (`disable-model-invocation: true`). Do not auto-run them. Flag sources of truth live in each skill’s `scripts/` when present — do not invent flags.

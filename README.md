@@ -11,12 +11,13 @@ Host-agnostic: any coding agent that can load a `SKILL.md` (Cursor, Claude Code,
 | [`init-next`](init-next/) | Empty Next.js App Router baseline via `create-next-app` (pnpm, TS, Tailwind, no `src/`, `--empty`) + `pnpm build` smoke | UI kits, auth, DB, feature folders, custom README |
 | [`add-shadcn`](add-shadcn/) | Locked shadcn/ui init + fixed core primitives + Toaster mount + build smoke | Demos, example pages, per-run style/color picks |
 | [`add-clerk`](add-clerk/) | Clerk auth infrastructure via the official CLI (accountless keys, public-by-default `proxy.ts`, `/sign-in` + `/sign-up`), shadcn theme when present + `clerk doctor` + build smoke | Dashboards, headers/user controls, route protection, roles, `.env.example` |
+| [`add-env`](add-env/) | Build-time env validation (`@t3-oss/env-nextjs` + zod) adopting existing `.env*` names, tracked `.env.example`, `SKIP_ENV_VALIDATION` escape hatch + build smoke | Rewriting `process.env` usages, guessing types, overwriting an existing `.env.example` |
 | [`init-readme`](init-readme/) | Short high-signal `README.md` + optional `AGENTS.md` Project blurb | Badges, emoji essays, inventing product copy |
 
 Typical pipeline (run only what you need, in order):
 
 ```text
-init-next  →  add-shadcn  →  add-clerk  →  init-readme
+init-next  →  add-shadcn  →  add-clerk  →  add-env  →  init-readme
 ```
 
 ## Philosophy
@@ -45,13 +46,16 @@ webskills/
   add-clerk/
     SKILL.md
     scripts/init.sh
+  add-env/
+    SKILL.md
+    scripts/init.sh
   init-readme/
     SKILL.md
 ```
 
 ## Install (any host)
 
-Skills are discovered as **directories that contain `SKILL.md`**. Install each package you want as a top-level skill in your agent’s skills directory (names must stay `init-next`, `add-shadcn`, `add-clerk`, `init-readme`).
+Skills are discovered as **directories that contain `SKILL.md`**. Install each package you want as a top-level skill in your agent’s skills directory (names must stay `init-next`, `add-shadcn`, `add-clerk`, `add-env`, `init-readme`).
 
 Examples:
 
@@ -60,12 +64,14 @@ Examples:
 ln -s "$(pwd)/init-next"   ~/.cursor/skills/init-next
 ln -s "$(pwd)/add-shadcn"  ~/.cursor/skills/add-shadcn
 ln -s "$(pwd)/add-clerk"   ~/.cursor/skills/add-clerk
+ln -s "$(pwd)/add-env"     ~/.cursor/skills/add-env
 ln -s "$(pwd)/init-readme" ~/.cursor/skills/init-readme
 
 # Claude Code / generic agents dir (adjust path to your setup)
 ln -s "$(pwd)/init-next"   ~/.agents/skills/init-next
 ln -s "$(pwd)/add-shadcn"  ~/.agents/skills/add-shadcn
 ln -s "$(pwd)/add-clerk"   ~/.agents/skills/add-clerk
+ln -s "$(pwd)/add-env"     ~/.agents/skills/add-env
 ln -s "$(pwd)/init-readme" ~/.agents/skills/init-readme
 ```
 
@@ -91,6 +97,8 @@ Project-scoped install: copy or symlink the same folders into a repo’s `.curso
 **add-shadcn** — `shadcn@latest init -d --base radix --css-variables --no-monorepo -y`, then add: `button` `input` `label` `card` `dialog` `dropdown-menu` `separator` `sonner` `skeleton`. Style ends up `radix-nova`, base color `neutral`, oklch CSS variables, RSC on. `form` omitted (current registry no-op). Flags live in [`add-shadcn/scripts/init.sh`](add-shadcn/scripts/init.sh).
 
 **add-clerk** — `clerk@latest init --framework next --pm pnpm --accountless --no-skills -y`; if `components.json` exists, also `@clerk/ui` + the `shadcn` theme on `<ClerkProvider>` + `@clerk/ui/themes/shadcn.css`. Then `clerk doctor` + `pnpm build`. Flags live in [`add-clerk/scripts/init.sh`](add-clerk/scripts/init.sh).
+
+**add-env** — no CLI; the script installs `@t3-oss/env-nextjs` + `zod`, reads variable names (never values) from `.env` / `.env.*`, and generates `lib/env.ts` (`z.string().min(1)` per name, `NEXT_PUBLIC_*` → client), `.env.example`, `!.env.example` in `.gitignore`, and `import "./lib/env"` atop `next.config.ts`. Run after skills that write env vars (e.g. `add-clerk`). Template lives in [`add-env/scripts/init.sh`](add-env/scripts/init.sh).
 
 **init-readme** — no CLI; agent writes a fixed-shape README from name + one-sentence description (+ optional extra tech).
 
