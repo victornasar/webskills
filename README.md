@@ -67,6 +67,8 @@ Or copy the three folders instead of symlinking. Nested under `webskills/` is fo
 
 Project-scoped install: copy or symlink the same three folders into a repo’s `.cursor/skills/` (or that host’s project skills path).
 
+**Smoke test after install:** run `web-start` against an empty lowercase-named temp dir (e.g. `/tmp/webskills-smoke`) and confirm `pnpm build` passes there.
+
 ## Prerequisites
 
 | Tool | Used by |

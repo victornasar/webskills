@@ -21,7 +21,7 @@ fi
 
 BASENAME=$(basename "$TARGET")
 if [[ ! "$BASENAME" =~ ^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$ ]]; then
-  echo "web-start: target basename must be a valid npm package name (lowercase letters, digits, hyphens, underscores; got: $BASENAME)" >&2
+  echo "web-start: target basename must be a valid npm package name (lowercase letters, digits, dots, hyphens, underscores; must start and end alphanumeric; got: $BASENAME)" >&2
   exit 1
 fi
 
