@@ -12,12 +12,13 @@ Host-agnostic: any coding agent that can load a `SKILL.md` (Cursor, Claude Code,
 | [`add-shadcn`](add-shadcn/) | Locked shadcn/ui init + fixed core primitives + Toaster mount + build smoke | Demos, example pages, per-run style/color picks |
 | [`add-clerk`](add-clerk/) | Clerk auth infrastructure via the official CLI (accountless keys, public-by-default `proxy.ts`, `/sign-in` + `/sign-up`), shadcn theme when present + `clerk doctor` + build smoke | Dashboards, headers/user controls, route protection, roles, `.env.example` |
 | [`add-env`](add-env/) | Build-time env validation (`@t3-oss/env-nextjs` + zod) adopting existing `.env*` names, tracked `.env.example`, `SKIP_ENV_VALIDATION` escape hatch + build smoke | Rewriting `process.env` usages, guessing types, overwriting an existing `.env.example` |
+| [`add-guardrails`](add-guardrails/) | Core-ESLint bans as errors: no `useEffect`/`useLayoutEffect`/`useInsertionEffect`, `process.env` only in `lib/env.ts`, features imported only via `@/features/<name>`, inline `eslint-disable` inert; `components/ui` ignored + `AGENTS.md` section + lint check | New packages, rewriting violating code, warnings, escape-hatch wrappers |
 | [`init-readme`](init-readme/) | Short high-signal `README.md` + optional `AGENTS.md` Project blurb | Badges, emoji essays, inventing product copy |
 
 Typical pipeline (run only what you need, in order):
 
 ```text
-init-next  →  add-shadcn  →  add-clerk  →  add-env  →  init-readme
+init-next  →  add-shadcn  →  add-clerk  →  add-env  →  add-guardrails  →  init-readme
 ```
 
 ## Philosophy
@@ -49,13 +50,16 @@ webskills/
   add-env/
     SKILL.md
     scripts/init.sh
+  add-guardrails/
+    SKILL.md
+    scripts/init.sh
   init-readme/
     SKILL.md
 ```
 
 ## Install (any host)
 
-Skills are discovered as **directories that contain `SKILL.md`**. Install each package you want as a top-level skill in your agent’s skills directory (names must stay `init-next`, `add-shadcn`, `add-clerk`, `add-env`, `init-readme`).
+Skills are discovered as **directories that contain `SKILL.md`**. Install each package you want as a top-level skill in your agent’s skills directory (names must stay `init-next`, `add-shadcn`, `add-clerk`, `add-env`, `add-guardrails`, `init-readme`).
 
 Examples:
 
@@ -65,6 +69,7 @@ ln -s "$(pwd)/init-next"   ~/.cursor/skills/init-next
 ln -s "$(pwd)/add-shadcn"  ~/.cursor/skills/add-shadcn
 ln -s "$(pwd)/add-clerk"   ~/.cursor/skills/add-clerk
 ln -s "$(pwd)/add-env"     ~/.cursor/skills/add-env
+ln -s "$(pwd)/add-guardrails" ~/.cursor/skills/add-guardrails
 ln -s "$(pwd)/init-readme" ~/.cursor/skills/init-readme
 
 # Claude Code / generic agents dir (adjust path to your setup)
@@ -72,6 +77,7 @@ ln -s "$(pwd)/init-next"   ~/.agents/skills/init-next
 ln -s "$(pwd)/add-shadcn"  ~/.agents/skills/add-shadcn
 ln -s "$(pwd)/add-clerk"   ~/.agents/skills/add-clerk
 ln -s "$(pwd)/add-env"     ~/.agents/skills/add-env
+ln -s "$(pwd)/add-guardrails" ~/.agents/skills/add-guardrails
 ln -s "$(pwd)/init-readme" ~/.agents/skills/init-readme
 ```
 
@@ -99,6 +105,8 @@ Project-scoped install: copy or symlink the same folders into a repo’s `.curso
 **add-clerk** — `clerk@latest init --framework next --pm pnpm --accountless --no-skills -y`; if `components.json` exists, also `@clerk/ui` + the `shadcn` theme on `<ClerkProvider>` + `@clerk/ui/themes/shadcn.css`. Then `clerk doctor` + `pnpm build`. Flags live in [`add-clerk/scripts/init.sh`](add-clerk/scripts/init.sh).
 
 **add-env** — no CLI; the script installs `@t3-oss/env-nextjs` + `zod`, reads variable names (never values) from `.env` / `.env.*`, and generates `lib/env.ts` (`z.string().min(1)` per name, `NEXT_PUBLIC_*` → client), `.env.example`, `!.env.example` in `.gitignore`, and `import "./lib/env"` atop `next.config.ts`. Run after skills that write env vars (e.g. `add-clerk`). Template lives in [`add-env/scripts/init.sh`](add-env/scripts/init.sh).
+
+**add-guardrails** — no CLI, no packages; the script writes `eslint.guardrails.mjs` (core `no-restricted-imports` / `no-restricted-syntax` / `no-restricted-properties`, `noInlineConfig: true`, `components/ui/**` ignored), pushes it last in `eslint.config.mjs`, and appends a `## Guardrails` section to `AGENTS.md`. Requires `lib/env.ts` (run after `add-env`). `pnpm build` does not lint — bans bite where `pnpm lint` runs. Rules live in [`add-guardrails/scripts/init.sh`](add-guardrails/scripts/init.sh).
 
 **init-readme** — no CLI; agent writes a fixed-shape README from name + one-sentence description (+ optional extra tech).
 
